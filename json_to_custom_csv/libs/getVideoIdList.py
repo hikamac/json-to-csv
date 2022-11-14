@@ -14,6 +14,7 @@ def get_video_id_list(channel_id):
     nextPageToken = None
     nextPageTokenTmp = None
     videos = {}
+    count = 0
     while True:
         if nextPageToken != None:
             nextPageTokenTmp = nextPageToken
@@ -25,21 +26,19 @@ def get_video_id_list(channel_id):
             order = "date",
             pageToken = nextPageTokenTmp
             ).execute()
+        with open("C:\\Users\\mach\\Documents\\json\\mprl{count}.json".format(count=count), "w", encoding="UTF-8") as f:
+            json.dump(search_response, f, ensure_ascii=False, indent=4)
+        print(search_response)
         
         for search_result in search_response.get("items", []):
             if search_result["id"]["kind"] == "youtube#video":
                 values = []
-                values.append(search_result["snippet"]["publishedAt"])
-                values.append(search_result["snippet"]["title"])
+                values.append({"title":search_result["snippet"]["title"],
+                               "published_at": search_result["snippet"]["publishedAt"],
+                               "thumbnail":search_result["snippet"]["thumbnails"]["high"]["url"]})
                 videos[search_result["id"]["videoId"]] = values
                 
-        # if ENV == 'dev':
-        #     break
-        # elif ENV == 'prod':
-        #     try:
-        #             nextPageToken = search_response["nextPageToken"]
-        #     except:
-        #         break
+        count += 1
         try:
             nextPageToken = search_response["nextPageToken"]
         except:
@@ -47,6 +46,12 @@ def get_video_id_list(channel_id):
     print("Videos:\n", "\n".join(videos), "\n")
     return(videos)
 
+def export_dict_to_json(dictionary_data, filename):
+    with open("..\\..\\export\\json\\{filename}.json".format(filename=filename), "w", encoding="UTF-8") as f:
+            json.dump(dictionary_data, f, ensure_ascii=False, indent=4)
+
 channel_id = args[1]
+file_name = args[2]
 print("channel_id\n",channel_id, "\n")
-get_video_id_list(channel_id)
+dict_data = get_video_id_list(channel_id)
+export_dict_to_json(dict_data, file_name)
