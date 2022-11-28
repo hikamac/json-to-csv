@@ -1,9 +1,6 @@
 from optparse import Values
 from googleapiclient.discovery import build
 import json
-import sys
-
-args = sys.argv
 
 DEVELOPER_KEY = "AIzaSyCJMadn3RLVL7ax3OhohhxIAmbVCBnef1U"
 YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -28,7 +25,7 @@ def get_video_id_list(channel_id):
             ).execute()
         with open("C:\\Users\\mach\\Documents\\json\\mprl{count}.json".format(count=count), "w", encoding="UTF-8") as f:
             json.dump(search_response, f, ensure_ascii=False, indent=4)
-        print(search_response)
+        # print(search_response)
         
         for search_result in search_response.get("items", []):
             if search_result["id"]["kind"] == "youtube#video":
@@ -43,15 +40,9 @@ def get_video_id_list(channel_id):
             nextPageToken = search_response["nextPageToken"]
         except:
             break
-    print("Videos:\n", "\n".join(videos), "\n")
+    # print("Videos:\n", "\n".join(videos), "\n")
     return(videos)
 
-def export_dict_to_json(dictionary_data, filename):
-    with open("..\\..\\export\\json\\{filename}.json".format(filename=filename), "w", encoding="UTF-8") as f:
+def convert_dict_to_json(dictionary_data, filename):
+    with open("export\\json\\{filename}.json".format(filename=filename), "w", encoding="UTF-8") as f:
             json.dump(dictionary_data, f, ensure_ascii=False, indent=4)
-
-channel_id = args[1]
-file_name = args[2]
-print("channel_id\n",channel_id, "\n")
-dict_data = get_video_id_list(channel_id)
-export_dict_to_json(dict_data, file_name)
