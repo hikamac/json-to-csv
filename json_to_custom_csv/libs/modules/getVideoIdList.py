@@ -5,6 +5,7 @@ import json
 DEVELOPER_KEY = "AIzaSyCJMadn3RLVL7ax3OhohhxIAmbVCBnef1U"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
+youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
 
 # return Value
 # {
@@ -24,8 +25,8 @@ YOUTUBE_API_VERSION = "v3"
 #     ],
 #     ...
 # }
+
 def get_video_id_list(channel_id):
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
     nextPageToken = None
     nextPageTokenTmp = None
     videos = {}
@@ -33,7 +34,7 @@ def get_video_id_list(channel_id):
     while True:
         if nextPageToken != None:
             nextPageTokenTmp = nextPageToken
-        
+
         search_response = youtube.search().list(
             part = "id,snippet",
             channelId = channel_id,

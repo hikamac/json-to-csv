@@ -12,8 +12,8 @@ def exe_oss_chat_downloader(videoId):
     try:
         chat = downloader.get_chat(target_url)
         return chat
-    except:
-        print("this video id is invalid")
+    except Exception as e:
+        print(e)
 
 def convert_chat_to_json(chat, filename):
     return
